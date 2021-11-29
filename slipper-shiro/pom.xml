@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>slipper</artifactId>
+        <groupId>com.slipper</groupId>
+        <version>1.0.1</version>
+    </parent>
+
+    <artifactId>slipper-shiro</artifactId>
+
+    <description>shiro</description>
+
+    <dependencies>
+        <!-- shiro与Spring集成包：https://mvnrepository.com/artifact/org.apache.shiro/shiro-spring -->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-spring</artifactId>
+        </dependency>
+        <!-- 核心 -->
+        <dependency>
+            <groupId>com.slipper</groupId>
+            <artifactId>slipper-core</artifactId>
+        </dependency>
+        <!-- 服务 -->
+        <dependency>
+            <groupId>com.slipper</groupId>
+            <artifactId>slipper-service</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

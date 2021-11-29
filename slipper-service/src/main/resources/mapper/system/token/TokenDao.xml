@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.slipper.service.modules.system.token.dao.TokenDao">
+
+<!--    TokenEntity queryByToken (@Param("token") String token);-->
+    <select id="queryByToken" resultType="com.slipper.service.modules.system.token.entity.TokenEntity">
+        select *
+        from token
+        where token = #{token}
+    </select>
+
+<!--    TokenEntity queryByAdminId (@Param("adminId") Long adminId);-->
+    <select id="queryByAdminId" resultType="com.slipper.service.modules.system.token.entity.TokenEntity">
+        select *
+        from token
+        where admin_id = #{adminId}
+    </select>
+
+</mapper>

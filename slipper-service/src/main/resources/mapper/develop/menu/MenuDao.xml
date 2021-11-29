@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.slipper.service.modules.develop.menu.dao.MenuDao">
+
+<!--    List<String> queryAllPermission();-->
+    <select id="queryAllPermission" resultType="String">
+        select distinct permission
+        from menu
+        where deleted = 0
+    </select>
+
+<!--    List<String> queryPermissionByAdminId(@Param("adminId") Long adminId);-->
+    <select id="queryPermissionByAdminId" resultType="String">
+        select distinct m.permission
+        from admin__role ar
+        left join role__menu rm
+            on rm.role_id = ar.role_id
+        left join menu m
+            on m.id = rm.menu_id
+        where ar.admin_id = #{adminId}
+          and m.deleted = 0
+          and m.is_display = 1
+    </select>
+
+<!--    List<MenuDto> queryMenuByParentId(@Param("parentId") Long parentId, @Param("menuIds") List<Long> menuIds);-->
+    <select id="queryMenuByParentId" resultType="com.slipper.service.modules.develop.menu.dto.MenuDto">
+        select id, parent_id, name_cn, name_en, url, `type`, icon, sort, is_tab, is_display, is_multiple, is_alive
+        from menu
+        where is_display = 1 and deleted = 0
+        <if test="menuIds != null and menuIds.size() > 0 ">
+            and id in
+            <foreach item="menuId" collection="menuIds" open="(" separator="," close=")">
+                #{menuId}
+            </foreach>
+        </if>
+        <if test="parentId != null">
+            and parent_id = #{parentId}
+        </if>
+        order by sort asc, created_at desc
+    </select>
+
+<!--    List<Long> queryAllMenuId();-->
+    <select id="queryAllMenuId" resultType="long">
+        select id
+        from menu
+        where is_display = 1 and deleted = 0
+    </select>
+
+<!--    List<MenuDto> queryAllMenuByParentId(@Param("parentId") Long parentId);-->
+    <select id="queryAllMenuByParentId" resultType="com.slipper.service.modules.develop.menu.dto.MenuDto">
+        select id, parent_id, name_cn, name_en, url, `type`, icon, sort, is_tab, is_display, is_multiple, is_alive, permission
+        from menu
+        where deleted = 0
+        <if test="parentId != null">
+            and parent_id = #{parentId}
+        </if>
+        order by sort asc, created_at desc
+    </select>
+
+<!--    List<MenuSelectDto> queryAllMenu(@Param("types") List<Integer> types, @Param("isDisplay") Integer isDisplay);-->
+    <select id="queryAllMenu" resultType="com.slipper.service.modules.develop.menu.dto.MenuSelectDto">
+        select id, parent_id, name_cn, name_en
+        from menu
+        where deleted = 0
+        <if test="isDisplay != null">
+            and is_display = #{isDisplay}
+        </if>
+        <if test="types != null">
+            and `type` in
+            <foreach item="type" collection="types" open="(" separator="," close=")">
+                #{type}
+            </foreach>
+        </if>
+        <if test="menuIds != null">
+            and id in
+            <foreach item="id" collection="menuIds" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+        order by sort asc, created_at desc
+    </select>
+
+<!--    BaseMenuDto queryById(@Param("id") Long id);-->
+    <select id="queryById" resultType="com.slipper.service.modules.develop.menu.dto.MenuDto">
+         select id, parent_id, name_cn, name_en, url, `type`, icon, sort, is_tab, is_display, is_multiple, is_alive, permission
+         from menu
+         where deleted = 0 and id = #{id}
+    </select>
+
+</mapper>

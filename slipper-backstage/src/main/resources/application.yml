@@ -1,0 +1,103 @@
+spring:
+  profiles:
+    active: prod # 环境 dev|test|prod
+  jackson:
+    time-zone: GMT+8 # 时区
+    date-format: yyyy-MM-dd HH:mm:ss # 时间格式化
+  servlet:
+    multipart:
+      max-file-size: 10MB # 单个文件最大
+      max-request-size: 100MB # 总上传数据最大
+      enabled: true # 是否启用
+  mvc:
+    throw-exception-if-no-handler-found: true
+    static-path-pattern: /static/**
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver # 数据库驱动名称
+      url: jdbc:mysql://${database.ip}:${database.port}/${database.name}?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false # url
+      username: ${database.username} # 用户名
+      password: ${database.password} # 密码
+
+      initial-size: 10 # 初始化大小
+      max-active: 100 # 最大个数
+      min-idle: 10 # 最小个数
+      max-wait: 6000 # 最大等待时间
+
+      time-between-eviction-runs-millis: 60000 # 间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+
+      min-evictable-idle-time-millis: 300000 # 最小生存时间
+      max-evictable-idle-time-millis: 600000 # 最大生存时间
+
+      #validation-query: SELECT 1 FROM DUAL # 用来检测连接是否有效的sql TODO:Oracle 需要使用
+      test-on-return: false # 在连接归还到连接池时是否测试该连接
+      test-on-borrow: false # 获取连接时候验证
+      test-while-idle: true # 验证连接的有效性
+
+      pool-prepared-statements: false # 是否缓存preparedStatement，TODO:比如说oracle。在mysql下建议关闭。
+      keep-alive: true # 连接池中的minIdle数量以内的连接，空闲时间超过minEvictableIdleTimeMillis，则会执行keepAlive操作
+
+      stat-view-servlet: # 监控
+        enabled: true #是否启用StatViewServlet TODO: 启用建议设置密码或白名单
+        reset-enable: true # 是否允许清空统计数据
+        url-pattern: ${druid.url-pattern} # 页面路径
+        login-username: ${druid.username} # 用户名
+        login-password: ${druid.password} # 密码
+        # 访问控制
+        allow: 127.0.0.1,172.17.1.169,157.0.142.162
+#        allow: 128.242.127.1/24,128.242.128.1
+        #deny: 128.242.127.4
+      filter:
+        stat:
+          enabled: true
+          log-slow-sql: true
+          slow-sql-millis: 100
+        wall:
+          enabled: true
+          config:
+            multi-statement-allow: true # 是否允许一次执行多条语句
+  redis:
+    database: 0
+    host: ${redis.host}
+    port: ${redis.port}
+    password: ${redis.password}
+    timeout: 6000ms
+    jedis:
+      pool:
+        max-active: 1000
+        max-wait: -1ms
+        max-idle: 10
+        min-idle: 5
+
+server:
+  port: ${service.port} # 启动端口
+  servlet:
+    context-path: ${service.context-path} # 项目路径
+  tomcat:
+    uri-encoding: utf-8 # 编码
+    connection-timeout: 5000ms # 连接超时
+    threads:
+      max: 1000 # 最大线程数
+      min-spare: 30 # 最小闲置线程
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml # mapper路径 多个用逗号隔开
+  type-aliases-package: com.slipper.**.entity # 实体路径 多个用逗号隔开
+  global-config:
+    db-config:
+      id-type: auto # 主键类型 AUTO:"数据库ID自增", INPUT:"用户输入ID", ID_WORKER:"全局唯一ID (数字类型唯一ID)", UUID:"全局唯一ID UUID"
+      table-underline: true # 表名是否使用驼峰转下划线命名,只对表名生效
+      # 字段验证策略 IGNORED:"忽略判断",NOT_NULL:"非 NULL 判断",NOT_EMPTY:"非空判断"
+      select-strategy: NOT_NULL
+      insert-strategy: NOT_NULL
+      update-strategy: NOT_NULL
+      logic-delete-field: deleted # 逻辑删除字段
+      logic-delete-value: 1 # 已删除值
+      logic-not-delete-value: 0 # 未删除值
+    banner: false # 是否控制台 print mybatis-plus 的 LOGO
+  configuration:
+    map-underscore-to-camel-case: true # 是否开启自动驼峰命名规则
+    cache-enabled: false # 是否开启Mybatis二级缓存
+    call-setters-on-nulls: true # 指定当结果集中值为 null 的时候是否调用映射对象的 Setter（Map 对象时为 put）方法，通常运用于有 Map.keySet() 依赖或 null 值初始化的情况
+    jdbc-type-for-null: 'null' # 当没有为参数指定特定的 JDBC 类型时，空值的默认 JDBC 类型

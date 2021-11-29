@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.slipper.service.modules.system.admin.dao.AdminDao">
+
+    <resultMap type="com.slipper.service.modules.system.admin.dto.AdminDto" id="adminRoleMap">
+        <result property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="salt" column="salt"/>
+        <result property="nickname" column="nickname"/>
+        <result property="mobile" column="mobile"/>
+        <result property="email" column="email"/>
+        <result property="avatar" column="avatar"/>
+        <result property="status" column="status"/>
+        <result property="createdAt" column="created_at"/>
+        <collection property="roles" javaType="List" ofType="com.slipper.service.modules.system.role.dto.RoleDto">
+            <id property="id" column="role_id"></id>
+            <result property="name" column="role_name"/>
+        </collection>
+    </resultMap>
+
+<!--    IPage<AdminDto> queryAllPage(Page<?> page, @Param("username") String username, @Param("nickname") String nickname);-->
+    <select id="queryAllPage" resultMap="adminRoleMap">
+        select a.id, a.username, a.nickname, a.mobile, a.email, a.avatar, a.status, a.created_at,
+               r.id as role_id, r.name as role_name
+        from admin a
+        left join admin__role ar
+            on ar.admin_id = a.id
+        left join role r
+            on r.id = ar.role_id
+                   and r.deleted = 0
+        where a.deleted = 0
+        <if test="username != null and username != ''">
+            and a.username like "%${username}%"
+        </if>
+        <if test="nickname != null and nickname != ''">
+            and a.nickname like "%${nickname}%"
+        </if>
+        order by a.created_at desc
+    </select>
+
+<!--    IPage<AdminDto> queryByCreatorPage(Page<?> page, @Param("creator") Long creator, @Param("username") String username, @Param("nickname") String nickname);-->
+    <select id="queryByCreatorPage" resultMap="adminRoleMap">
+        select a.id, a.username, a.nickname, a.mobile, a.email, a.avatar, a.status, a.created_at,
+               r.id as role_id, r.name as role_name
+        from admin a
+        left join admin__role ar
+            on ar.admin_id = a.id
+        left join role r
+            on r.id = ar.role_id
+                   and r.deleted = 0
+        where a.creator = #{creator} and a.deleted = 0
+        order by a.created_at desc
+    </select>
+
+<!--    AdminDto queryById (Long id);-->
+    <select id="queryById" resultMap="adminRoleMap">
+        select a.id, a.username, a.nickname, a.mobile, a.email, a.avatar, a.status, a.created_at,
+               r.id as role_id, r.name as role_name
+        from admin a
+                 left join admin__role ar
+                           on ar.admin_id = a.id
+                 left join role r
+                           on r.id = ar.role_id
+                               and r.deleted = 0
+        where a.id = #{id}
+          and a.deleted = 0
+    </select>
+
+<!--    AdminDto queryByUsername (@Param("username") String username);-->
+    <select id="queryByUsername" resultType="com.slipper.service.modules.system.admin.dto.AdminDto">
+        select id, username, nickname, mobile, email, avatar
+        from admin
+        where username = #{username}
+    </select>
+
+</mapper>

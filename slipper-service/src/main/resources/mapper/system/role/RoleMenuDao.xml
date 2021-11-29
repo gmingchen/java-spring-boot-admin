@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.slipper.service.modules.system.role.dao.RoleMenuDao">
+
+<!--    List<Long> queryMenuIdByRoleId(@Param("roleIds") List<Long> roleIds);-->
+    <select id="queryMenuIdByRoleId" resultType="long">
+        select distinct menu_id
+        from role__menu
+        <where>
+            <if test="roleIds != null">
+                role_id in
+                <foreach item="roleId" collection="roleIds" open="(" separator="," close=")">
+                    #{roleId}
+                </foreach>
+            </if>
+        </where>
+    </select>
+</mapper>
