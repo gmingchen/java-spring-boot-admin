@@ -61,6 +61,10 @@ vue3-src
 └─slipper-shiro shiro权限控制模块
 ```
 
+### 广告
+
+![领红包](http://oss.gumingchen.icu/image/red-envelopes.jpg)
+
 ### 联系方式
 
 <table>
