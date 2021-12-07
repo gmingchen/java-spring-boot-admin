@@ -100,7 +100,7 @@ vue3-src
 
 是一个管理后台基础功能框架，基于 [vue3](https://github.com/vuejs/vue-next) 、 [element-plus](https://github.com/element-plus/element-plus) 和 [typescript](https://github.com/microsoft/TypeScript) 实现。内置了 i18n 国际化，动态路由，权限验证。-[私活神器]
 
-[im-vue](https://github.com/gmingchen/im-vue)
+[vue3-element-plus-im](https://github.com/gmingchen/vue3-element-plus-im)
 
 是一个即时聊天系统，基于 [vue3](https://github.com/vuejs/vue-next) 、 [element-plus](https://github.com/element-plus/element-plus) 实现。内置了好友私聊功能。
 
