@@ -61,10 +61,6 @@ vue3-src
 └─slipper-shiro shiro权限控制模块
 ```
 
-### 广告
-
-![领红包](http://oss.gumingchen.icu/image/red-envelopes.jpg)
-
 ### 联系方式
 
 <table>
@@ -104,5 +100,6 @@ vue3-src
 
 是一个即时聊天系统，基于 [vue3](https://github.com/vuejs/vue-next) 、 [element-plus](https://github.com/element-plus/element-plus) 实现。内置了好友私聊功能。
 
+[java-im](https://github.com/gmingchen/java-im)
 
-
+是[vue3-element-plus-im](https://github.com/gmingchen/vue3-element-plus-im)即时聊天系统的 __`java`__ 后端代码，__`springboot`__ 基于 [netty](https://github.com/netty/netty) 、 [shiro](https://github.com/apache/shiro) 实现。
