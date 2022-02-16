@@ -79,7 +79,7 @@ vue3-src
       <img src="http://oss.gumingchen.icu/image/qq-group-qr-code.jpg" width="200px" title="QQ交流群" alt="QQ交流群:124371554" />
     </td>
     <td>
-      <img src="http://oss.gumingchen.icu/image/wechat-group-qr-code.jpg" width="200px" title="微信交流群" alt="微信交流群:124371554" />
+      <img src="http://oss.gumingchen.icu/image/wechat-group-qr-code.jpg?time=3" width="200px" title="微信交流群" alt="微信交流群:124371554" />
     </td>
     <td>
       <img src="http://oss.gumingchen.icu/image/wechat-qr-code-1.jpg" width="200px" title="微信" alt="微信:Gy1240235512" />
