@@ -35,7 +35,7 @@ public class TokenUtils {
             String token = toHexString(digest);
             return token;
         } catch (Exception e) {
-            throw new RunException("数据库中已存在该记录!", e);
+            throw new RunException("数据库中已存在该记录！", e);
         }
     }
 

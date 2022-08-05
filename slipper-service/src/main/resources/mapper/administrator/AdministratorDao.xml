@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.slipper.service.modules.administrator.dao.AdministratorDao">
+    <resultMap type="com.slipper.service.modules.administrator.model.dto.AdministratorRoleDTO" id="administratorRoleMap">
+        <result property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="nickname" column="nickname"/>
+        <result property="avatar" column="avatar"/>
+        <result property="mobile" column="mobile"/>
+        <result property="email" column="email"/>
+        <result property="sex" column="sex"/>
+        <result property="status" column="status"/>
+        <result property="supervisor" column="supervisor"/>
+        <result property="enterpriseId" column="enterprise_id"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <collection property="roles" javaType="List" ofType="com.slipper.service.modules.role.model.dto.RoleSimplifyDTO">
+            <id property="id" column="role_id"></id>
+            <result property="name" column="role_name"/>
+        </collection>
+    </resultMap>
+
+<!--    AdministratorRoleDto queryById(@Param("id") Long id);-->
+    <select id="queryById" resultMap="administratorRoleMap">
+        SELECT a.id, a.username, a.nickname, a.avatar, a.mobile, a.email, a.status, a.sex, a.supervisor, a.enterprise_id, a.created_at, a.updated_at,
+            r.id AS role_id, r.name AS role_name
+        FROM administrator AS a
+            LEFT JOIN administrator__role AS ar
+                ON ar.administrator_id = a.id
+            LEFT JOIN role AS r
+                ON r.id = ar.role_id AND r.deleted = 0
+        WHERE a.id = #{id}
+            AND a.deleted = 0
+    </select>
+
+<!--    IPage<AdministratorRoleDto> queryPage(Page<AdministratorRoleDto> page,-->
+<!--    @Param("enterpriseId") Long enterpriseId,-->
+<!--    @Param("creator") Long creator,-->
+<!--    @Param("name") String name,-->
+<!--    @Param("supervisor") Integer supervisor,-->
+<!--    @Param("start") String start,-->
+<!--    @Param("end") String end);-->
+    <select id="queryPage" resultMap="administratorRoleMap">
+        SELECT a.id, a.username, a.nickname, a.avatar, a.mobile, a.email, a.sex, a.status, a.supervisor, a.enterprise_id, a.created_at, a.updated_at,
+               r.id AS role_id, r.name AS role_name
+        FROM administrator AS a
+                 LEFT JOIN administrator__role AS ar
+                           ON ar.administrator_id = a.id
+                 LEFT JOIN role AS r
+                           ON r.id = ar.role_id AND r.deleted = 0
+        WHERE a.deleted = 0
+            <if test="enterpriseId != null">
+                AND a.enterprise_id = #{enterpriseId}
+            </if>
+            <if test="creator != null">
+                AND a.creator = #{creator}
+            </if>
+            <if test="supervisor != null">
+                AND a.supervisor = #{supervisor}
+            </if>
+            <if test="name != null and name !=''">
+                AND (a.username LIKE "%${name}%" or a.nickname LIKE "%${name}%")
+            </if>
+            <if test="start != null and start != ''">
+                AND DATE_FORMAT(a.created_at,'%Y-%m-%d') <![CDATA[ >= ]]> DATE_FORMAT(#{start},'%Y-%m-%d')
+            </if>
+            <if test="end != null and end != ''">
+                AND DATE_FORMAT(a.created_at,'%Y-%m-%d') <![CDATA[ <= ]]> DATE_FORMAT(#{end},'%Y-%m-%d')
+            </if>
+        ORDER BY a.supervisor DESC, a.created_at DESC
+    </select>
+
+<!--    IPage<AdministratorOnlineVO> queryPageByIds(Page<AdministratorOnlineVO> page,-->
+<!--    @Param("enterpriseId") List<Long> ids,-->
+<!--    @Param("name") String name);-->
+    <select id="queryPageByIds" resultType="com.slipper.service.modules.administrator.model.vo.AdministratorOnlineVO">
+        SELECT a.id, a.username, a.nickname, a.avatar, a.mobile, a.email, a.sex, a.supervisor, a.enterprise_id,
+               e.name AS enterprise_name, t.created_at AS login_at
+        FROM administrator AS a
+            LEFT JOIN enterprise AS e ON e.id = a.enterprise_id
+            LEFT JOIN token AS t on t.administrator_id = a.id
+        WHERE a.deleted = 0
+            AND a.id IN
+                <foreach item="item" collection="ids" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            <if test="name != null and name !=''">
+                AND (a.username LIKE "%${name}%" or a.nickname LIKE "%${name}%")
+            </if>
+        ORDER BY a.supervisor DESC, a.created_at DESC
+    </select>
+
+</mapper>

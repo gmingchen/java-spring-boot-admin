@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * 分页结果封装工具类
@@ -44,5 +45,13 @@ public class RPage<T> implements Serializable {
         this.total = iPage.getTotal();
         this.pages = iPage.getPages();
         this.list = iPage.getRecords();
+    }
+
+    public RPage(IPage iPage, List<T> list) {
+        this.current = iPage.getCurrent();
+        this.size = iPage.getSize();
+        this.total = iPage.getTotal();
+        this.pages = iPage.getPages();
+        this.list = list;
     }
 }

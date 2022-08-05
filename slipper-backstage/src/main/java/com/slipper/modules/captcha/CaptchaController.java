@@ -1,5 +1,6 @@
 package com.slipper.modules.captcha;
 
+import com.slipper.common.utils.Constant;
 import com.slipper.service.modules.captcha.service.CaptchaService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,9 +50,8 @@ public class CaptchaController {
         response.setDateHeader("Expires", 0);
         response.setContentType("image/jpeg");
 
-        ImageIO.write(captchaService.createCaptcha(uuid), "jpg", servletOutputStream);
+        ImageIO.write(captchaService.createCaptcha(uuid, Constant.STORAGE_MODE), "jpg", servletOutputStream);
         IOUtils.close(servletOutputStream);
     }
-
 
 }

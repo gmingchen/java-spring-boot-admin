@@ -4,6 +4,13 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+/**
+ * XssFilter配置
+ *
+ * @author slipper
+ * @email 1240235512@qq.com
+ * @date 1995-08-30 00:00:00
+ */
 public class XssFilter implements Filter {
 
     @Override

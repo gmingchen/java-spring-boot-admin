@@ -1,20 +1,20 @@
 package com.slipper.service.modules.log.operation.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.slipper.common.utils.Query;
 import com.slipper.common.utils.RPage;
+import com.slipper.service.model.PageModel;
 import com.slipper.service.modules.log.operation.dao.OperationLogDao;
 import com.slipper.service.modules.log.operation.entity.OperationLogEntity;
+import com.slipper.service.modules.log.operation.model.form.OperationLogPageDateForm;
+import com.slipper.service.modules.log.operation.model.vo.OperationLogVO;
+import com.slipper.service.modules.log.operation.model.vo.OperationLogSimplifyVO;
 import com.slipper.service.modules.log.operation.service.OperationLogService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-
 /**
- * 定时任务日志
+ * 操作日志
  *
  * @author gumingchen
  * @email 1240235512@qq.com
@@ -24,22 +24,33 @@ import java.util.Map;
 public class OperationLogServiceImpl extends ServiceImpl<OperationLogDao, OperationLogEntity> implements OperationLogService {
 
     @Override
-    public RPage<OperationLogEntity> queryPage(Map<String, Object> params) {
-        String username = (String)params.get("username");
-        String operation = (String)params.get("operation");
-        String ip = (String)params.get("ip");
-        String start = (String)params.get("start");
-        String end = (String)params.get("end");
-        Page<OperationLogEntity> page = new Query<OperationLogEntity>().getPage(params);
-        QueryWrapper<OperationLogEntity> wrapper = new QueryWrapper<OperationLogEntity>()
-                .like(StringUtils.isNotBlank(username), "username", username)
-                .like(StringUtils.isNotBlank(operation), "operation", operation)
-                .like(StringUtils.isNotBlank(ip), "ip", ip)
-                .ge(StringUtils.isNotBlank(start), "created_at", start)
-                .le(StringUtils.isNotBlank(end), "created_at", end)
-                .orderByDesc("created_at");
+    public RPage<OperationLogVO> queryPage(OperationLogPageDateForm pageDateForm, Long enterpriseId) {
+        Page<OperationLogVO> page = new Query<OperationLogVO>().getPage(pageDateForm.getCurrent(), pageDateForm.getSize());
+        pageDateForm.setId(enterpriseId);
+        return new RPage<>(
+                baseMapper.queryPage(
+                        page,
+                        pageDateForm.getOperation(),
+                        pageDateForm.getName(),
+                        pageDateForm.getStart(),
+                        pageDateForm.getEnd(),
+                        pageDateForm.getId()
+                )
+        );
+    }
 
-        return new RPage<>(this.page(page, wrapper));
+    @Override
+    public RPage<OperationLogSimplifyVO> queryPage(PageModel pageModel, Long administratorId) {
+        Page<OperationLogSimplifyVO> page = new Query<OperationLogSimplifyVO>().getPage(pageModel.getCurrent(), pageModel.getSize());
+
+        return new RPage<>(
+                baseMapper.queryPageByAdministrator(page,administratorId )
+        );
+    }
+
+    @Override
+    public void delete(Long enterpriseId) {
+        baseMapper.delete(enterpriseId);
     }
 
     @Override

@@ -2,12 +2,14 @@ package com.slipper.service.modules.log.operation.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.slipper.common.utils.RPage;
+import com.slipper.service.model.PageModel;
 import com.slipper.service.modules.log.operation.entity.OperationLogEntity;
-
-import java.util.Map;
+import com.slipper.service.modules.log.operation.model.form.OperationLogPageDateForm;
+import com.slipper.service.modules.log.operation.model.vo.OperationLogVO;
+import com.slipper.service.modules.log.operation.model.vo.OperationLogSimplifyVO;
 
 /**
- * 定时任务日志
+ * 操作日志
  *
  * @author gumingchen
  * @email 1240235512@qq.com
@@ -17,14 +19,29 @@ public interface OperationLogService extends IService<OperationLogEntity> {
 
     /**
      * 分页列表
-     * @param params 分页参数
-     * @return RPage
+     * @param pageDateForm 分页参数
+     * @param enterpriseId 企业ID
+     * @return
      */
-    RPage<OperationLogEntity> queryPage(Map<String, Object> params);
+    RPage<OperationLogVO> queryPage(OperationLogPageDateForm pageDateForm, Long enterpriseId);
 
     /**
-     * 日志清理
+     * 分页列表
+     * @param pageModel 分页参数
+     * @param administratorId 管理员ID
+     * @return
      */
-    void truncate ();
+    RPage<OperationLogSimplifyVO> queryPage(PageModel pageModel, Long administratorId);
+
+    /**
+     * 删除企业日志
+     * @param enterpriseId
+     */
+    void delete(Long enterpriseId);
+
+    /**
+     * 清空操作日志表
+     */
+    void truncate();
 
 }

@@ -22,7 +22,7 @@ public class RunException extends RuntimeException implements Serializable {
 		this.code = code;
 	}
 
-	public RunException(int code,  Throwable e) {
+	public RunException(int code, Throwable e) {
 		super(e);
 		this.code = code;
 	}
@@ -32,7 +32,7 @@ public class RunException extends RuntimeException implements Serializable {
 		this.message = message;
 	}
 
-	public RunException(String message,  Throwable e) {
+	public RunException(String message, Throwable e) {
 		super(e);
 		this.message = message;
 	}

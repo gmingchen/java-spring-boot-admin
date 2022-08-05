@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.slipper.service.modules.role.dao.RoleDao">
+
+    <resultMap type="com.slipper.service.modules.role.model.vo.RoleInfoVO" id="roleInfoMap">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="remark" column="remark"/>
+        <result property="show" column="show"/>
+        <collection property="enterpriseMenuIds" javaType="List" ofType="Long">
+            <constructor>
+                <arg column="enterprise_menu_id"/>
+            </constructor>
+        </collection>
+    </resultMap>
+
+<!--    RoleInfoVO queryInfo(@Param("id") Long id);-->
+    <select id="queryInfo" resultMap="roleInfoMap">
+        SELECT r.id, r.name, r.remark, r.show,
+                rm.enterprise_menu_id
+        FROM role r
+            LEFT JOIN role__menu AS rm ON rm.role_id = r.id
+            LEFT JOIN enterprise__menu AS em ON em.id = rm.enterprise_menu_id AND em.deleted = 0
+            LEFT JOIN menu AS m ON m.id = em.menu_id AND m.deleted = 0
+        where r.deleted = 0
+        <if test="id != null">
+            and r.id = #{id}
+        </if>
+    </select>
+
+</mapper>

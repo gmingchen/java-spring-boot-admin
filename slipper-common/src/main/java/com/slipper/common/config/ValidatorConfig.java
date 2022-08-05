@@ -22,7 +22,11 @@ public class ValidatorConfig {
     public Validator validator() {
         return getValidator();
     }
-    // failFast - true: 快速校验模式 false: 普通校验模式
+
+    /**
+     * failFast - true: 快速校验模式 false: 普通校验模式
+     * @return
+     */
     public static Validator getValidator() {
         ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.class)
                 .configure()

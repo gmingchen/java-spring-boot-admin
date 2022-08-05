@@ -1,7 +1,7 @@
 package com.slipper.service.modules.login.service;
 
-import com.slipper.service.modules.system.token.entity.TokenEntity;
-import com.slipper.service.modules.login.vo.LoginVo;
+import com.slipper.service.modules.login.model.form.BackstageLoginForm;
+import com.slipper.service.modules.token.entity.TokenEntity;
 
 /**
  * 登录
@@ -12,8 +12,16 @@ import com.slipper.service.modules.login.vo.LoginVo;
  */
 public interface LoginService {
 
-    TokenEntity login(LoginVo loginVo);
+    /**
+     * 后台登录
+     * @param backstageLoginForm 登录参数
+     * @return
+     */
+    TokenEntity backstageLogin(BackstageLoginForm backstageLoginForm);
 
-    void logout(Long adminId);
-
+    /**
+     * 后台登出
+     * @param id 管理员ID
+     */
+    void backstageLogout(Long id);
 }

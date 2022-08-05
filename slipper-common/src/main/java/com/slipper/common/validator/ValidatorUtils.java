@@ -29,7 +29,7 @@ public class ValidatorUtils {
         Set<ConstraintViolation<Object>> constraintViolations = validator.validate(object, groups);
         if (!constraintViolations.isEmpty()) {
             StringBuilder message = new StringBuilder();
-            message.append(Constant.VERIFICATION_ERROR);
+            message.append(Constant.VERIFICATION_ERROR_MESSAGE);
             String comma = "";
             for (ConstraintViolation<Object> constraint:  constraintViolations) {
                 message.append(comma).append(constraint.getPropertyPath()+ "-" + constraint.getMessage());

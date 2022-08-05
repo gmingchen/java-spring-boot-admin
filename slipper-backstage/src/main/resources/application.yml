@@ -1,9 +1,10 @@
 spring:
   profiles:
-    active: prod # 环境 dev|test|prod
+    active: dev # 环境 dev|test|prod
   jackson:
     time-zone: GMT+8 # 时区
     date-format: yyyy-MM-dd HH:mm:ss # 时间格式化
+    default-property-inclusion: non_null # 为 null 时字段不进行序列化 减少流量
   servlet:
     multipart:
       max-file-size: 10MB # 单个文件最大
@@ -89,8 +90,7 @@ mybatis-plus:
       id-type: auto # 主键类型 AUTO:"数据库ID自增", INPUT:"用户输入ID", ID_WORKER:"全局唯一ID (数字类型唯一ID)", UUID:"全局唯一ID UUID"
       table-underline: true # 表名是否使用驼峰转下划线命名,只对表名生效
       # 字段验证策略 IGNORED:"忽略判断",NOT_NULL:"非 NULL 判断",NOT_EMPTY:"非空判断"
-      select-strategy: NOT_NULL
-      insert-strategy: NOT_NULL
+      insert-strategy: NOT_EMPTY
       update-strategy: NOT_NULL
       logic-delete-field: deleted # 逻辑删除字段
       logic-delete-value: 1 # 已删除值

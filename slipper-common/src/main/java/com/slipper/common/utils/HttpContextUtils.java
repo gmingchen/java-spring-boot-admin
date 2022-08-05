@@ -1,16 +1,12 @@
 package com.slipper.common.utils;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import cn.hutool.http.useragent.UserAgent;
+import cn.hutool.http.useragent.UserAgentUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,28 +68,22 @@ public class HttpContextUtils {
 		return request.getRequestURI();
 	}
 
+	public static String getOperatingSystem() {
+		String userAgent = getUserAgent();
+		UserAgent ua = UserAgentUtil.parse(userAgent);
+		return ua.getOs().toString();
+	}
+
+	public static String getBrowser() {
+		String userAgent = getUserAgent();
+		UserAgent ua = UserAgentUtil.parse(userAgent);
+		return ua.getBrowser().toString();
+	}
+
 	public static Map<String, Object> getParams(){
 		HttpServletRequest request = getHttpServletRequest();
 		Map<String, Object> map = new HashMap<>();
 		request.getParameterMap().forEach((key, value) -> map.put(key, value[0]));
-
-		// 获取HttpServletRequest 中Request PayLoad 格式入参数据
-		/*StringBuilder sb = new StringBuilder();
-		JSONObject builderJson = null;
-		try(BufferedReader reader = request.getReader();) {
-			char[]buff = new char[1024];
-			int len;
-			while((len = reader.read(buff)) != -1) {
-				sb.append(buff,0, len);
-			}
-			String str = sb.toString();
-			builderJson = JSONObject.parseObject(str);
-
-		}catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		System.out.println(builderJson.toString());*/
 
 		return map;
 	}

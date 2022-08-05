@@ -46,7 +46,7 @@ public class RedisUtils {
      */
     public void set(String key, Object value, long expire) {
         if(StringUtils.isBlank(key)) {
-            throw new RunException("redis key 不可以为空!");
+            throw new RunException("redis key 不可以为空！");
         }
         redisTemplate.opsForValue().set(key, value, expire, TimeUnit.SECONDS);
     }

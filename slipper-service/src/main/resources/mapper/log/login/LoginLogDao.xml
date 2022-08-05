@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.slipper.service.modules.log.login.dao.LoginLogDao">
+
+<!--    IPage<OperationPageVO> queryPage(-->
+<!--    Page<OperationPageVO> page,-->
+<!--    @Param("name") String name,-->
+<!--    @Param("start") String start,-->
+<!--    @Param("end") String end,-->
+<!--    @Param("enterpriseId") Long enterpriseId-->
+<!--    );-->
+    <select id="queryPage" resultType="com.slipper.service.modules.log.login.model.vo.LoginLogVO">
+        SELECT ll.id, ll.account, ll.message, ll.ip, ll.address, ll.browser, ll.operating_system, ll.agent, ll.creator, ll.created_at,
+                a.username, a.nickname, a.avatar
+        FROM login_log AS ll
+        LEFT JOIN administrator AS a ON a.id = ll.creator
+        <where> ll.deleted = 0
+            <if test="enterpriseId != null">
+                AND a.enterprise_id = #{enterpriseId}
+            </if>
+            <if test="name != null and name !=''">
+                AND (a.username LIKE "%${name}%" or a.nickname LIKE "%${name}%")
+            </if>
+            <if test="start != null and start != ''">
+                AND DATE_FORMAT(ll.created_at,'%Y-%m-%d') <![CDATA[ >= ]]> DATE_FORMAT(#{start},'%Y-%m-%d')
+            </if>
+            <if test="end != null and end != ''">
+                AND DATE_FORMAT(ll.created_at,'%Y-%m-%d') <![CDATA[ <= ]]> DATE_FORMAT(#{end},'%Y-%m-%d')
+            </if>
+        </where>
+        ORDER BY ll.created_at DESC
+    </select>
+
+<!--    IPage<LoginLogSimplifyPageVO> queryPageByAdministrator(Page<LoginLogPageVO> page, @Param("administratorId") Long administratorId);-->
+    <select id="queryPageByAdministrator" resultType="com.slipper.service.modules.log.login.model.vo.LoginLogSimplifyVO">
+        SELECT id, message, ip, address, browser, operating_system, created_at
+        FROM login_log
+        WHERE creator = #{administratorId} AND deleted = 0
+        ORDER BY created_at DESC
+    </select>
+
+<!--    void delete(@Param("enterpriseId") Long enterpriseId);-->
+    <update id="delete">
+        UPDATE login_log AS ll
+        LEFT JOIN administrator AS a ON a.id = ll.creator
+        SET ll.deleted = 1
+        WHERE a.enterprise_id = ${enterpriseId}
+    </update>
+
+<!--    void truncate ();-->
+    <update id="truncate">
+        TRUNCATE TABLE login_log;
+    </update>
+
+<!--    List<VisitsVO> queryVisits(@Param("day") Integer day);-->
+    <select id="queryVisits" resultType="com.slipper.service.modules.log.login.model.vo.VisitsVO">
+        SELECT
+            DATE_FORMAT( created_at, '%Y-%m-%d' ) AS `date`,
+            COUNT( DISTINCT ip ) AS `count`
+        FROM
+            login_log
+        WHERE
+            created_at BETWEEN SUBDATE( DATE( NOW( ) ), INTERVAL #{day} DAY )
+                AND DATE( NOW( ) )
+        GROUP BY
+            `date`
+    </select>
+
+</mapper>

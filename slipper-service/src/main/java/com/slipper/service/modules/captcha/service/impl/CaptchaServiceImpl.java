@@ -1,14 +1,14 @@
 package com.slipper.service.modules.captcha.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.code.kaptcha.Producer;
-import com.slipper.service.modules.captcha.dao.CaptchaDao;
-import com.slipper.service.modules.captcha.entity.CaptchaEntity;
-import com.slipper.service.modules.captcha.service.CaptchaService;
 import com.slipper.common.exception.RunException;
 import com.slipper.common.utils.Constant;
 import com.slipper.common.utils.DateUtils;
+import com.slipper.service.modules.captcha.dao.CaptchaDao;
+import com.slipper.service.modules.captcha.entity.CaptchaEntity;
+import com.slipper.service.modules.captcha.service.CaptchaService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -30,37 +30,47 @@ public class CaptchaServiceImpl extends ServiceImpl<CaptchaDao, CaptchaEntity> i
     private Producer producer;
 
     @Override
-    public BufferedImage createCaptcha(String uuid) {
+    public BufferedImage createCaptcha(String uuid, Integer mode) {
         if (StringUtils.isBlank(uuid)) {
-            throw new RunException(Constant.VERIFICATION_ERROR_CODE, Constant.VERIFICATION_ERROR);
+            String message = Constant.VERIFICATION_ERROR_MESSAGE + "-UUID不能为空";
+            throw new RunException(Constant.VERIFICATION_ERROR_CODE, message);
         }
         String code = producer.createText();
+        Date now = new Date();
         CaptchaEntity captchaEntity = new CaptchaEntity();
         captchaEntity.setUuid(uuid);
         captchaEntity.setCode(code);
-        captchaEntity.setExpiredAt(DateUtils.addMinutes(new Date(), 1));
-        this.save(captchaEntity);
+        captchaEntity.setExpiredAt(DateUtils.addMinutes(now, 1));
+        captchaEntity.setCreatedAt(now);
+        switch (mode) {
+            case 1:
+                this.save(captchaEntity);
+                break;
+            default:
+        }
 
         return producer.createImage(code);
     }
 
     @Override
-    public boolean validateCode(String uuid, String code) {
-        QueryWrapper<CaptchaEntity> wrapper =
-                new QueryWrapper<CaptchaEntity>()
-                        .eq("uuid", uuid);
-        CaptchaEntity captchaEntity = this.getOne(wrapper);
-        if(captchaEntity == null) {
-            return false;
+    public boolean validateCode(String uuid, String code, Integer mode) {
+        CaptchaEntity captchaEntity = null;
+        switch (mode) {
+            case 1:
+                LambdaQueryWrapper<CaptchaEntity> wrapper = new LambdaQueryWrapper<CaptchaEntity>()
+                        .eq(CaptchaEntity::getUuid, uuid);
+                captchaEntity = this.getOne(wrapper);
+                // 验证存在验证码之后删除验证码
+                if (captchaEntity != null) {
+                    this.removeById(captchaEntity.getUuid());
+                }
+                break;
+            default:
         }
-
-        // 验证存在验证码之后删除验证码
-        this.removeById(captchaEntity.getUuid());
-
-        if (captchaEntity.getCode().equals(code) && captchaEntity.getExpiredAt().getTime() >= new Date().getTime()) {
+        if (captchaEntity != null && captchaEntity.getCode().equals(code) && captchaEntity.getExpiredAt().getTime() >= System.currentTimeMillis()) {
             return true;
         }
-
         return false;
     }
+
 }

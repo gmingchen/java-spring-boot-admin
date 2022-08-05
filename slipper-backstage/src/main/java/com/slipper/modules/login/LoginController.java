@@ -2,8 +2,8 @@ package com.slipper.modules.login;
 
 import com.slipper.common.utils.R;
 import com.slipper.modules.AbstractController;
+import com.slipper.service.modules.login.model.form.BackstageLoginForm;
 import com.slipper.service.modules.login.service.LoginService;
-import com.slipper.service.modules.login.vo.LoginVo;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,10 +36,10 @@ public class LoginController extends AbstractController {
      * @apiName login
      * @apiParamExample 请求参数示例
      * {
-     *     username: 1, // 帐号
-     *     password: 1, // 密码
-     *     uuid: 1, // UUID
-     *     code: 1 // 验证码
+     *     username: '', // 帐号
+     *     password: '', // 密码
+     *     uuid: '', // UUID
+     *     code: '' // 验证码
      * }
      * @apiSuccessExample 响应结果示例
      * {
@@ -47,16 +47,16 @@ public class LoginController extends AbstractController {
      *     status: 'success',
      *     message: '成功!',
      *     data: {
-     *         admin_id: 1, // 用户ID
-     *         token: 1, // token
-     *         expired_at: 1, // 过期时间
-     *         updated_at: 1 // 更新时间
+     *         admin_id: '', // 用户ID
+     *         token: '', // token
+     *         expired_at: '', // 过期时间
+     *         created_at: '' // 创建时间
      *     }
      * }
      */
     @PostMapping("/login")
-    public R login(@RequestBody @Validated LoginVo loginVo) {
-        return R.success(loginService.login(loginVo));
+    public R login(@RequestBody @Validated BackstageLoginForm backstageLoginForm) {
+        return R.success(loginService.backstageLogin(backstageLoginForm));
     }
 
     /**
@@ -68,8 +68,7 @@ public class LoginController extends AbstractController {
      * @apiGroup Login
      * @apiName logout
      * @apiParamExample 请求参数示例
-     * {
-     * }
+     * {}
      * @apiSuccessExample 响应结果示例
      * {
      *     code: 0,
@@ -79,7 +78,7 @@ public class LoginController extends AbstractController {
      */
     @PostMapping("/logout")
     public R logout() {
-        loginService.logout(getAdminId());
+        loginService.backstageLogout(getAdministratorId());
         return R.success();
     }
 

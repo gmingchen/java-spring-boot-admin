@@ -2,6 +2,7 @@ package com.slipper.service.handler;
 
 import com.slipper.common.exception.RunException;
 import com.slipper.common.utils.Constant;
+import com.slipper.common.utils.HttpContextUtils;
 import com.slipper.common.utils.R;
 import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
@@ -47,8 +48,8 @@ public class RunExceptionHandler {
 	 */
 	@ExceptionHandler(NoHandlerFoundException.class)
 	public R handlerNoFoundException(Exception e) {
-		logger.error(e.getMessage(), e);
-		return R.error(Constant.NOT_FOUND_CODE, Constant.NOT_FOUND);
+		logger.error(HttpContextUtils.getIp());
+		return R.error(Constant.NOT_FOUND_CODE, Constant.NOT_FOUND_MESSAGE);
 	}
 
 	/**
@@ -70,7 +71,7 @@ public class RunExceptionHandler {
 	@ExceptionHandler(AuthorizationException.class)
 	public R handleAuthorizationException(AuthorizationException e){
 		logger.error(e.getMessage(), e);
-		return R.error(Constant.NOT_ALLOWED_CODE, Constant.NOT_ALLOWED);
+		return R.error(Constant.NOT_ALLOWED_CODE, Constant.NOT_ALLOWED_MESSAGE);
 	}
 
 	/**
@@ -84,18 +85,6 @@ public class RunExceptionHandler {
 		return R.error("Sql异常!");
 	}
 
-
-	/**
-	 * 服务端异常
-	 * @param e
-	 * @return
-	 */
-	@ExceptionHandler(Exception.class)
-	public R handleException(Exception e){
-		logger.error(e.getMessage(), e);
-		return R.error();
-	}
-
 	/**
 	 * 实体校验异常
 	 * @param e
@@ -103,7 +92,7 @@ public class RunExceptionHandler {
 	 */
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public R handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-		String message = Constant.VERIFICATION_ERROR;
+		String message = Constant.VERIFICATION_ERROR_MESSAGE;
 		logger.error(message + e.getParameter().getMethod() + e.getBindingResult().getFieldErrors());
 		String comma = "";
 		for (FieldError error : e.getBindingResult().getFieldErrors()) {
@@ -122,7 +111,18 @@ public class RunExceptionHandler {
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
 	public R handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e){
 		logger.error(e.getMessage(), e);
-		return R.error(Constant.METHOD_ERROR_CODE, Constant.METHOD_ERROR + e.getMethod());
+		return R.error(Constant.METHOD_ERROR_CODE, Constant.METHOD_ERROR_MESSAGE + e.getMethod());
+	}
+
+	/**
+	 * 服务端异常
+	 * @param e
+	 * @return
+	 */
+	@ExceptionHandler(Exception.class)
+	public R handleException(Exception e){
+		logger.error(e.getMessage(), e);
+		return R.error();
 	}
 
 	/**

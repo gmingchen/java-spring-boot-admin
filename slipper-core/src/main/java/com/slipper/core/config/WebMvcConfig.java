@@ -22,9 +22,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry corsRegistry){
         // 设置允许跨域的路由
         corsRegistry.addMapping("/**")
-                .allowedOriginPatterns("*") // 设置允许跨域请求的域名
-                .allowCredentials(true) // 是否允许证书（cookies）
-                .allowedMethods("*") // 设置允许的方法
-                .allowedHeaders("*"); // 设置允许的请求头
+                // 设置允许跨域请求的域名
+                .allowedOriginPatterns("*")
+                // 是否允许证书（cookies）
+                .allowCredentials(true)
+                // 设置允许的方法
+                .allowedMethods("*")
+                // 设置允许的请求头
+                .allowedHeaders("*");
     }
 }

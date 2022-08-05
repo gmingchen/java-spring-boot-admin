@@ -13,10 +13,15 @@ import java.util.HashMap;
 public class R extends HashMap<String, Object> implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    private static final String STATUS = "status";
+    private static final String CODE = "code";
+    private static final String MESSAGE = "message";
+    private static final String DATA = "data";
+
     public R() {
-        put("status", Constant.SUCCESS_STATUS);
-        put("code", Constant.SUCCESS_CODE);
-        put("message", Constant.SUCCESS_MESSAGE);
+        put(STATUS, Constant.SUCCESS_STATUS);
+        put(CODE, Constant.SUCCESS_CODE);
+        put(MESSAGE, Constant.SUCCESS_MESSAGE);
     }
 
     public static R success() {
@@ -24,7 +29,7 @@ public class R extends HashMap<String, Object> implements Serializable {
     }
     public static R success(Object data) {
         R r = new R();
-        r.put("data", data);
+        r.put(DATA, data);
         return r;
     }
     public static R success(HashMap<String, Object> map) {
@@ -35,33 +40,33 @@ public class R extends HashMap<String, Object> implements Serializable {
 
     public static R error() {
         R r = new R();
-        r.put("status", Constant.ERROR_STATUS);
-        r.put("code", Constant.ERROR_CODE);
-        r.put("message", Constant.ERROR_MESSAGE);
+        r.put(STATUS, Constant.ERROR_STATUS);
+        r.put(CODE, Constant.ERROR_CODE);
+        r.put(MESSAGE, Constant.ERROR_MESSAGE);
         return r;
     }
 
     public static R error(Integer code) {
         R r = new R();
-        r.put("status", Constant.ERROR_STATUS);
-        r.put("code", code);
-        r.put("message", Constant.ERROR_MESSAGE);
+        r.put(STATUS, Constant.ERROR_STATUS);
+        r.put(CODE, code);
+        r.put(MESSAGE, Constant.ERROR_MESSAGE);
         return r;
     }
 
     public static R error(String message) {
         R r = new R();
-        r.put("status", Constant.ERROR_STATUS);
-        r.put("code", Constant.ERROR_CODE);
-        r.put("message", message);
+        r.put(STATUS, Constant.ERROR_STATUS);
+        r.put(CODE, Constant.ERROR_CODE);
+        r.put(MESSAGE, message);
         return r;
     }
 
     public static R error(Integer code, String message) {
         R r = new R();
-        r.put("status", Constant.ERROR_STATUS);
-        r.put("code", code);
-        r.put("message", message);
+        r.put(STATUS, Constant.ERROR_STATUS);
+        r.put(CODE, code);
+        r.put(MESSAGE, message);
         return r;
     }
 

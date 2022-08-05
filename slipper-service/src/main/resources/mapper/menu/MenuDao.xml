@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.slipper.service.modules.menu.dao.MenuDao">
+
+<!--    List<MenuTreeVO> queryList();-->
+    <select id="queryList" resultType="com.slipper.service.modules.menu.model.vo.MenuTreeVO">
+        SELECT *
+        FROM menu
+        WHERE deleted = 0
+        ORDER BY sort ASC, created_at DESC
+    </select>
+
+<!--    List<MenuSimplifyTreeVO> querySelectList();-->
+    <select id="querySelectList" resultType="com.slipper.service.modules.menu.model.vo.MenuSimplifyTreeVO">
+        SELECT id, name_cn, name_en, `type`, parent_id
+        FROM menu
+        WHERE deleted = 0
+        ORDER BY sort ASC, created_at DESC
+    </select>
+
+<!--    void updateSortBatch(@Param("list") List<MenuEntity> list);-->
+    <update id="updateSortBatch">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            UPDATE menu
+            <set>
+                sort= #{item.sort},
+                updater = #{item.updater},
+                updated_at = #{item.updatedAt}
+            </set>
+            WHERE id = ${item.id}
+        </foreach>
+    </update>
+
+</mapper>

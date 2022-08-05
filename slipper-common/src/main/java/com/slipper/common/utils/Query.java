@@ -28,4 +28,12 @@ public class Query<T> {
         Page<T> page = new Page<>(current, size);
         return page;
     }
+
+    public Page<T> getPage(Integer c, Integer s) {
+        long current = c != null ? c : 1;
+        long size = s != null ? s : 10;
+
+        Page<T> page = new Page<>(current, size);
+        return page;
+    }
 }

@@ -1,12 +1,8 @@
 package com.slipper.service.modules.log.operation.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -19,18 +15,12 @@ import java.util.Date;
  * @date 1995-08-30 00:00:00
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @TableName("operation_log")
 public class OperationLogEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
-    /**
-     * 用户名
-     */
-    private String username;
     /**
      * 操作
      */
@@ -46,24 +36,43 @@ public class OperationLogEntity implements Serializable {
     /**
      * 请求参数
      */
-    private String params;
+    @JsonProperty("request_data")
+    private String requestData;
     /**
-     * 类名和方法名
+     * 响应参数
      */
-    @JsonProperty("class_name")
-    private String className;
+    @JsonProperty("response_data")
+    private String responseData;
+    /**
+     * IP地址
+     */
+    private String ip;
+    /**
+     * 地址
+     */
+    private String address;
+    /**
+     * 浏览器
+     */
+    private String browser;
+    /**
+     * 操作系统
+     */
+    @JsonProperty("operating_system")
+    private String operatingSystem;
+    /**
+     * 用户代理
+     */
+    private String agent;
     /**
      * 执行时长
      */
     private Long times;
     /**
-     * ip地址
+     * 完整方法名
      */
-    private String ip;
-    /**
-     * 用户代理
-     */
-    private String agent;
+    @JsonProperty("method_name")
+    private String methodName;
     /**
      * 创建者
      */
@@ -73,5 +82,9 @@ public class OperationLogEntity implements Serializable {
      */
     @JsonProperty("created_at")
     private Date createdAt;
-
+    /**
+     * 是否删除：0-否 1-是
+     */
+    @TableLogic
+    private Integer deleted;
 }

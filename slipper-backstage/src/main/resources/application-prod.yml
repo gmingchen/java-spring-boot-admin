@@ -7,19 +7,19 @@ service:
   context-path: /slipper
 
 database:
-  ip: localhost
+  ip: 139.196.182.46
   port: 3306
-  name: slipper-base
+  name: slipper-admin-base
   username: root
-  password: root
+  password: ll5271211314
 
 druid:
   url-pattern: /druid/*
-  username: admin
-  password: admin
+  username: gumingchen
+  password: gumingchen
 
 token:
-  expire: 3600
+  expire: 36000
 
 redis:
   host: localhost
