@@ -16,8 +16,8 @@
 
 <!--    List<EnterpriseMenuDto> queryCompleteEnterpriseMenuByEnterpriseId(@Param("id") Long id);-->
     <select id="queryCompleteEnterpriseMenuByEnterpriseId" resultType="com.slipper.service.modules.enterprise.model.dto.EnterpriseMenuTreeDTO">
-        SELECT em.id, em.menu_id, em.enterprise_id,
-               m.path, m.name, m.url, m.permission, m.type, m.show, m.tab, m.multiple, m.keepalive, m.parent_id,
+        SELECT em.id, em.menu_id, em.enterprise_id, em.sort As em_sort,
+               m.path, m.name, m.url, m.permission, m.type, m.show, m.tab, m.multiple, m.keepalive, m.parent_id, m.sort AS m_sort,
             CASE WHEN em.name_cn IS NOT NULL AND em.name_cn != ''
                 THEN em.name_cn
                 ELSE m.name_cn END AS name_cn,
@@ -36,7 +36,7 @@
         WHERE em.enterprise_id = #{id}
             AND em.deleted = 0
             AND m.deleted = 0
-        ORDER BY em.sort ASC, m.sort ASC
+        ORDER BY em_sort ASC, m_sort ASC
     </select>
 
 <!--    List<String> queryPermissionByAdministratorId(@Param("id") Long id);-->
@@ -59,8 +59,8 @@
 
 <!--    List<EnterpriseMenuTreeDto> queryCompleteEnterpriseMenuByAdministratorId(@Param("id") Long id);-->
     <select id="queryCompleteEnterpriseMenuByAdministratorId" resultType="com.slipper.service.modules.enterprise.model.dto.EnterpriseMenuTreeDTO">
-        SELECT DISTINCT em.id, em.menu_id, em.enterprise_id,
-               m.path, m.name, m.url, m.permission, m.type, m.show, m.tab, m.multiple, m.keepalive, m.parent_id,
+        SELECT DISTINCT em.id, em.menu_id, em.enterprise_id, em.sort As em_sort,
+               m.path, m.name, m.url, m.permission, m.type, m.show, m.tab, m.multiple, m.keepalive, m.parent_id, m.sort AS m_sort,
                CASE WHEN em.name_cn IS NOT NULL AND em.name_cn != ''
                 THEN em.name_cn
                     ELSE m.name_cn END AS name_cn,
@@ -86,12 +86,12 @@
           AND r.deleted = 0
           AND em.deleted = 0
           AND m.deleted = 0
-        ORDER BY em.sort ASC, m.sort ASC
+        ORDER BY em_sort ASC, m_sort ASC
     </select>
 
 <!--    List<EnterpriseMenuTreeVO> queryEnterpriseMenuByEnterpriseId(@Param("id") Long id);-->
     <select id="queryEnterpriseMenuByEnterpriseId" resultType="com.slipper.service.modules.enterprise.model.vo.EnterpriseMenuTreeVO">
-        SELECT em.id, em.menu_id, em.enterprise_id, em.updated_at, m.type, m.parent_id,
+        SELECT em.id, em.menu_id, em.enterprise_id, em.updated_at, em.sort As em_sort, m.type, m.parent_id, m.sort AS m_sort,
                CASE WHEN em.name_cn IS NOT NULL AND em.name_cn != ''
                 THEN em.name_cn
                     ELSE m.name_cn END AS name_cn,
@@ -110,12 +110,12 @@
         WHERE em.enterprise_id = #{id}
           AND em.deleted = 0
           AND m.deleted = 0
-        ORDER BY em.sort ASC, m.sort ASC
+        ORDER BY em_sort ASC, m_sort ASC
     </select>
 
 <!--    List<EnterpriseMenuSimplifyVO> queryListByEnterpriseId(Long enterpriseId);-->
     <select id="queryListByEnterpriseId" resultType="com.slipper.service.modules.enterprise.model.vo.EnterpriseMenuSimplifyTreeVO">
-        SELECT em.id, em.menu_id, m.parent_id,
+        SELECT em.id, em.menu_id, em.sort As em_sort, m.parent_id, m.sort AS m_sort,
                CASE WHEN em.name_cn IS NOT NULL AND em.name_cn != ''
                 THEN em.name_cn
                     ELSE m.name_cn END AS name_cn,
@@ -128,12 +128,12 @@
         WHERE em.enterprise_id = #{enterpriseId}
           AND em.deleted = 0
           AND m.deleted = 0
-        ORDER BY em.sort ASC, m.sort ASC
+        ORDER BY em_sort ASC, m_sort ASC
     </select>
 
 <!--    List<EnterpriseMenuSimplifyVO> queryListByRoleId(List<Long> roleIds);-->
     <select id="queryListByRoleId" resultType="com.slipper.service.modules.enterprise.model.vo.EnterpriseMenuSimplifyTreeVO">
-        SELECT DISTINCT em.id, em.menu_id, m.parent_id,
+        SELECT DISTINCT em.id, em.menu_id, em.sort As em_sort, m.parent_id, m.sort AS m_sort,
                CASE WHEN em.name_cn IS NOT NULL AND em.name_cn != ''
                 THEN em.name_cn
                     ELSE m.name_cn END AS name_cn,
@@ -151,7 +151,7 @@
                 </foreach>
           AND em.deleted = 0
           AND m.deleted = 0
-        ORDER BY em.sort ASC, m.sort ASC
+        ORDER BY em_sort ASC, m_sort ASC
     </select>
 
 <!--    List<Long> queryMenuIdByEnterpriseId(@Param("enterpriseId") Long enterpriseId);-->
