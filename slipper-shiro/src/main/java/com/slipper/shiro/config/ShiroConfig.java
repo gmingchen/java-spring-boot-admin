@@ -65,9 +65,9 @@ public class ShiroConfig {
         // api 文档
         mappingMap.put("/static/apidoc/**", "anon");
         // 图片验证码
-        mappingMap.put("/backstage/captcha.jpg", "anon");
+        mappingMap.put("/admin/captcha.jpg", "anon");
         // 登录
-        mappingMap.put("/backstage/login", "anon");
+        mappingMap.put("/admin/login", "anon");
         // websocket
         mappingMap.put("/websocket/**", "anon");
         mappingMap.put("/**", "auth");
